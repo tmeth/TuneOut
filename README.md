@@ -10,3 +10,10 @@
 * Rivka Chana Flig
 * Hailey Lazar
 * Toby Meth
+
+** Sample Information of Website Format **
+
+# Playlist Titles
+## Songs
+* Artist 
+* Release Date
