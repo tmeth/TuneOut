@@ -1,5 +1,11 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Home.css'; // Optional: if you want to style this component
 
-function HomePage() {
+function Home() {
+  const navigate = useNavigate();  //const navigate = useNavigate();
+
+function Home() {
   //const navigate = useNavigate();
 
   const playlists = [
@@ -29,4 +35,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Home;
