@@ -1,12 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Home.css'; // Optional: if you want to style this component
 
 function Home() {
-  const navigate = useNavigate();  //const navigate = useNavigate();
-
-function Home() {
-  //const navigate = useNavigate();
+  const navigate = useNavigate();  
 
   const playlists = [
     { id: 1, name: '🎧 Chill' },
