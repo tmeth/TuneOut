@@ -9,6 +9,17 @@ function Home() {
     { id: 2, name: '🔥 Workout' },
     { id: 3, name: '🌙 Late Night' },
   ];
+  const handleDelete = async (playlistId) => {
+      try {
+        const result = await deletePlaylist(playlistId);
+        alert(result.message);  // e.g. "Playlist with ID 12345 deleted."
+        setPlaylists(playlists.filter(p => p.id !== playlistId));
+      } catch (error) {
+        alert('Failed to delete playlist: ' + error.message);
+      }
+    };
+
+
 
   return (
     <div className="homepage">
