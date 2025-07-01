@@ -10,7 +10,7 @@ function Home() {
     { id: 1, name: '🎧 Chill' },
     { id: 2, name: '🔥 Workout' },
     { id: 3, name: '🌙 Late Night' },
-  ];
+  ]);
   const handleDelete = async (playlistId) => {
     try {
       const result = await deletePlaylist(playlistId);
