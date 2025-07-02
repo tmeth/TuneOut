@@ -1,14 +1,26 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { deletePlaylist } from '../api/api';
+
 
 function Home() {
   const navigate = useNavigate();  
 
-  const playlists = [
+  const [playlists, setPlaylists] = useState([
     { id: 1, name: '🎧 Chill' },
     { id: 2, name: '🔥 Workout' },
     { id: 3, name: '🌙 Late Night' },
-  ];
+  ]);
+  const handleDelete = async (playlistId) => {
+    try {
+      const result = await deletePlaylist(playlistId);
+      alert(result.message);
+      setPlaylists(playlists.filter(p => p.id !== playlistId));
+    } catch (error) {
+      alert('Failed to delete playlist: ' + error.message);
+    }
+  };
+
 
   return (
     <div className="homepage">
@@ -22,7 +34,12 @@ function Home() {
             <div className="actions">
               <button onClick={() => navigate(`/playlist/${playlist.id}`)}>Open</button>
               <button onClick={() => alert('Add song logic here')}>Add Song</button>
-              <button onClick={() => alert('Delete logic here')} className="delete-btn">🗑️</button>
+              <button
+                onClick={() => handleDelete(playlist.id)}
+                className="delete-btn"
+              >
+                🗑️
+              </button>
             </div>
           </div>
         ))}
