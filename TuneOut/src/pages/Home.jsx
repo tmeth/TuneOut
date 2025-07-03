@@ -16,7 +16,7 @@ function Home() {
   return (
     <div className="homepage">
       <h1>🎵 TuneOut</h1>
-      <button onClick={() => navigate('/create')} className="create-btn">+ Create Playlist</button>
+      <button onClick={() => navigate('/CreatePlaylist')} className="create-btn">+ Create Playlist</button>
 
       <div className="playlist-grid">
         {playlists.map((playlist) => (
