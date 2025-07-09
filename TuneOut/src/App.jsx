@@ -10,6 +10,7 @@ import './App.css';
 import ReadPlaylist from './pages/readPlaylist';
 import AddSong from './pages/AddSong';
 
+import CreatePlaylist from './pages/CreatePlaylist.jsx';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/readPlaylist/:id" element={<ReadPlaylist />} />
           <Route path="/addSong/:id" element={<AddSong />} />
+          <Route path="/CreatePlaylist" element={<CreatePlaylist />} />
         </Routes>
       </div>
     </Router>
