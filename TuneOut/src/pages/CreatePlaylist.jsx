@@ -1,52 +1,92 @@
-
 import React, { useState } from 'react';
-import axios from 'axios';
 
 const CreatePlaylist = () => {
-  const [name, setName] = useState('');
-  const [songs, setSongs] = useState('');
+  const [playlistName, setPlaylistName] = useState('');
+  const [songInput, setSongInput] = useState('');
+  const [songList, setSongList] = useState([]);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+
+  const addSong = () => {
+    if (songInput.trim()) {
+      setSongList([...songList, songInput.trim()]);
+      setSongInput('');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const songList = songs.split(',').map(song => song.trim());
-
     try {
-      const res = await axios.post('https://fj26176edf.execute-api.us-east-1.amazonaws.com/dev/createPlaylist', {
-        name: name,
-        songs: songList
-      }, {
+      const res = await fetch('https://fj26176edf.execute-api.us-east-1.amazonaws.com/createPlaylist', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+          name: playlistName,
+          songs: songList
+        })
       });
 
-      setResponse(res.data);
+      const data = await res.json();
+      setResponse(data);
       setError(null);
     } catch (err) {
-      setError(err.message);
+      console.error('Fetch error:', err);
+      setError(err.message || 'Failed to fetch');
       setResponse(null);
     }
   };
 
   return (
-    <div>
-      <h2>Create Playlist</h2>
+    <div className="container mt-5">
+      <h2 className="mb-4">Create Playlist</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Playlist Name:</label>
-          <input type="text" value={name} onChange={e => setName(e.target.value)} required />
+        <div className="mb-3">
+          <label className="form-label">Playlist Name</label>
+          <input
+            type="text"
+            className="form-control"
+            value={playlistName}
+            onChange={(e) => setPlaylistName(e.target.value)}
+            required
+          />
         </div>
-        <div>
-          <label>Songs (comma-separated):</label>
-          <input type="text" value={songs} onChange={e => setSongs(e.target.value)} required />
+
+        <div className="mb-3 d-flex align-items-center">
+          <input
+            type="text"
+            className="form-control me-2"
+            placeholder="Add a song"
+            value={songInput}
+            onChange={(e) => setSongInput(e.target.value)}
+          />
+          <button type="button" className="btn btn-outline-primary" onClick={addSong}>+</button>
         </div>
-        <button type="submit">Create</button>
+
+        {songList.length > 0 && (
+          <ul className="list-group mb-3">
+            {songList.map((song, index) => (
+              <li key={index} className="list-group-item">{song}</li>
+            ))}
+          </ul>
+        )}
+
+        <button type="submit" className="btn btn-success">Create Playlist</button>
       </form>
-      {response && <pre>{JSON.stringify(response, null, 2)}</pre>}
-      {error && <p style={{color: 'red'}}>{error}</p>}
+
+      {response && (
+        <div className="alert alert-success mt-4">
+          <strong>Success:</strong> {response.message}
+        </div>
+      )}
+
+      {error && (
+        <div className="alert alert-danger mt-4">
+          <strong>Error:</strong> {error}
+        </div>
+      )}
     </div>
   );
 };
