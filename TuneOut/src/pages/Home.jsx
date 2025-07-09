@@ -1,6 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import readPlaylist from './readPlaylist';
+
 function Home() {
   const navigate = useNavigate();  
 
@@ -20,7 +23,7 @@ function Home() {
           <div key={playlist.id} className="playlist-card">
             <h3>{playlist.name}</h3>
             <div className="actions">
-              <button onClick={() => navigate(`/playlist/${playlist.id}`)}>Open</button>
+              <button onClick={() => navigate(`/readPlaylist/${playlist.id}`)}>Open</button>
               <button onClick={() => alert('Add song logic here')}>Add Song</button>
               <button onClick={() => alert('Delete logic here')} className="delete-btn">🗑️</button>
             </div>

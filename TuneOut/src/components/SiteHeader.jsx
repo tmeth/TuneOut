@@ -30,12 +30,7 @@ function SiteHeader() {
                 About
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink to="/playlists" className="nav-link">
-                Playlists
-              </NavLink>
-            </li>
-            <li className="nav-item">
+              <li className="nav-item">
               <NavLink to="/contact" className="nav-link">
                 Contact Us
               </NavLink>
