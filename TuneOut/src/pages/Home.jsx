@@ -24,7 +24,7 @@ function Home() {
             <h3>{playlist.name}</h3>
             <div className="actions">
               <button onClick={() => navigate(`/readPlaylist/${playlist.id}`)}>Open</button>
-              <button onClick={() => alert('Add song logic here')}>Add Song</button>
+              <button onClick={() => navigate(`/addSong/${playlist.id}`)}>Add Song</button>
               <button onClick={() => alert('Delete logic here')} className="delete-btn">🗑️</button>
             </div>
           </div>
