@@ -9,6 +9,7 @@ import Contact from './pages/Contact.jsx';
 import './App.css';
 import ReadPlaylist from './pages/readPlaylist';
 import AddSong from './pages/AddSong';
+import DeletePlaylist from './pages/DeletePlaylist';
 
 
 function App() {
