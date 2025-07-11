@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Lambda + API Gateway using SAM
+Resources:
+  PlaylistAPI:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Name: PlaylistAPI
+  ReadPlaylistFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ReadPlaylistFunction
+      Handler: index.handler
+      Runtime: nodejs22.x
+      CodeUri: ReadPlaylistFunction
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: tune_out
+      Events:
+        ApiForMyApp:
+          Type: HttpApi
+          Properties:
+            Path: /readPlaylist
+            Method: GET
+            ApiId:
+              Ref: PlaylistAPI
+    Metadata:
+      SamResourceId: ReadPlaylistFunction
+Outputs:
+  ApiUrl:
+    Description: HTTP API endpoint base URL
+    Value:
+      Fn::Sub: https://${PlaylistAPI}.execute-api.${AWS::Region}.amazonaws.com
