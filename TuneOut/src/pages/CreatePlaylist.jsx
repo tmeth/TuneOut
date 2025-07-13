@@ -2,15 +2,25 @@ import React, { useState } from 'react';
 
 const CreatePlaylist = () => {
   const [playlistName, setPlaylistName] = useState('');
-  const [songInput, setSongInput] = useState('');
+  const [playlistAuthor, setPlaylistAuthor] = useState('');
+  const [songTitle, setSongTitle] = useState('');
+  const [songArtist, setSongArtist] = useState('');
+  const [songDuration, setSongDuration] = useState('');
   const [songList, setSongList] = useState([]);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
 
   const addSong = () => {
-    if (songInput.trim()) {
-      setSongList([...songList, songInput.trim()]);
-      setSongInput('');
+    if (songTitle && songArtist && songDuration) {
+      const newSong = {
+        title: songTitle.trim(),
+        artist: songArtist.trim(),
+        duration: songDuration.trim()
+      };
+      setSongList([...songList, newSong]);
+      setSongTitle('');
+      setSongArtist('');
+      setSongDuration('');
     }
   };
 
@@ -24,9 +34,11 @@ const CreatePlaylist = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: playlistName,
-          songs: songList
+        name: playlistName,
+        author: playlistAuthor,
+        songs: songList
         })
+
       });
 
       const data = await res.json();
@@ -44,7 +56,7 @@ const CreatePlaylist = () => {
       <h2 className="mb-4">Create Playlist</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label className="form-label">Playlist Name</label>
+          <label className="form-label">Playlist Title</label>
           <input
             type="text"
             className="form-control"
@@ -54,21 +66,51 @@ const CreatePlaylist = () => {
           />
         </div>
 
-        <div className="mb-3 d-flex align-items-center">
+        <div className="mb-3">
+          <label className="form-label">Author</label>
           <input
             type="text"
-            className="form-control me-2"
-            placeholder="Add a song"
-            value={songInput}
-            onChange={(e) => setSongInput(e.target.value)}
+            className="form-control"
+            value={playlistAuthor}
+            onChange={(e) => setPlaylistAuthor(e.target.value)}
+            required
           />
-          <button type="button" className="btn btn-outline-primary" onClick={addSong}>+</button>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Add Song</label>
+          <div className="d-flex flex-column flex-md-row gap-2">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Title"
+              value={songTitle}
+              onChange={(e) => setSongTitle(e.target.value)}
+            />
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Artist"
+              value={songArtist}
+              onChange={(e) => setSongArtist(e.target.value)}
+            />
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Duration"
+              value={songDuration}
+              onChange={(e) => setSongDuration(e.target.value)}
+            />
+            <button type="button" className="btn btn-outline-primary" onClick={addSong}>+</button>
+          </div>
         </div>
 
         {songList.length > 0 && (
           <ul className="list-group mb-3">
             {songList.map((song, index) => (
-              <li key={index} className="list-group-item">{song}</li>
+              <li key={index} className="list-group-item">
+                {song.title} by {song.artist} ({song.duration})
+              </li>
             ))}
           </ul>
         )}
