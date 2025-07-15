@@ -6,11 +6,13 @@ import SiteHeader from './components/SiteHeader';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact.jsx';
+import ReadPlaylist from './pages/ReadPlaylist.jsx';
 import './App.css';
+
 import ReadPlaylist from './pages/readPlaylist';
 import AddSong from './pages/AddSong';
 import DeletePlaylist from './pages/DeletePlaylist';
-
+import CreatePlaylist from './pages/CreatePlaylist.jsx';
 
 function App() {
   return (
@@ -21,8 +23,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/readPlaylist/:id" element={<ReadPlaylist />} />
-          <Route path="/addSong/:id" element={<AddSong />} />
+          <Route path="/CreatePlaylist" element={<CreatePlaylist />} />
+          <Route path="/ReadPlaylist/:id" element={<ReadPlaylist />} />
         </Routes>
       </div>
     </Router>
