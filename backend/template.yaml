@@ -26,6 +26,24 @@ Resources:
             Method: GET
             ApiId: !Ref PlaylistAPI
 
+DeletePlaylistFunction:
+  Type: AWS::Serverless::Function
+  Properties:
+    FunctionName: DeletePlaylistFunction
+    Handler: index.handler
+    Runtime: nodejs22.x
+    CodeUri: Delete/
+    Policies:
+      - DynamoDBCrudPolicy:
+          TableName: tune_out
+    Events:
+      ApiForMyApp:
+        Type: HttpApi
+        Properties:
+          Path: /deletePlaylist
+          Method: DELETE
+          ApiId: !Ref PlaylistAPI
+
 Outputs:
   ApiUrl:
     Description: "HTTP API endpoint base URL"
