@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import readPlaylist from './readPlaylist';
+import readPlaylist from './ReadPlaylist';
 
 function Home() {
   const navigate = useNavigate();  
