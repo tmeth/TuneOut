@@ -8,8 +8,6 @@ import About from './pages/About';
 import Contact from './pages/Contact.jsx';
 import ReadPlaylist from './pages/ReadPlaylist.jsx';
 import './App.css';
-
-import ReadPlaylist from './pages/readPlaylist';
 import AddSong from './pages/AddSong';
 import DeletePlaylist from './pages/DeletePlaylist';
 import CreatePlaylist from './pages/CreatePlaylist.jsx';
@@ -25,6 +23,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/CreatePlaylist" element={<CreatePlaylist />} />
           <Route path="/ReadPlaylist/:id" element={<ReadPlaylist />} />
+          <Route path="/DeletePlaylist/:id" element={<DeletePlaylist />} />
+          <Route path="/AddSong/:id" element={<AddSong />} />
         </Routes>
       </div>
     </Router>
