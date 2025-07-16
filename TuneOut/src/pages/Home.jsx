@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import readPlaylist from './readPlaylist';
+import readPlaylist from './ReadPlaylist';
 
 function Home() {
   const navigate = useNavigate();  
@@ -36,7 +36,7 @@ function Home() {
             <div className="actions">
               <button onClick={() => navigate(`/readPlaylist/${playlist.pk}`)}>Open</button>
               <button onClick={() => navigate(`/addSong/${playlist.id}`)}>Add Song</button>
-              <button onClick={() => alert('Delete logic here')} className="delete-btn">🗑️</button>
+              <button onClick={() => navigate(`/deletePlaylist/${playlist.id}`)} className="delete-btn">🗑️</button>
             </div>
           </div>
         ))}
