@@ -36,7 +36,7 @@ function Home() {
             <div className="actions">
               <button onClick={() => navigate(`/readPlaylist/${playlist.pk}`)}>Open</button>
               <button onClick={() => navigate(`/addSong/${playlist.id}`)}>Add Song</button>
-              <button onClick={() => alert('Delete logic here')} className="delete-btn">🗑️</button>
+              <button onClick={() => navigate(`/deletePlaylist/${playlist.id}`)} className="delete-btn">🗑️</button>
             </div>
           </div>
         ))}

@@ -8,6 +8,10 @@ import About from './pages/About';
 import Contact from './pages/Contact.jsx';
 import ReadPlaylist from './pages/ReadPlaylist.jsx';
 import './App.css';
+
+import ReadPlaylist from './pages/readPlaylist';
+import AddSong from './pages/AddSong';
+import DeletePlaylist from './pages/DeletePlaylist';
 import CreatePlaylist from './pages/CreatePlaylist.jsx';
 
 function App() {
