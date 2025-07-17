@@ -15,21 +15,21 @@ exports.handler = async (event) => {
   const params = {
     TableName: "tune_out",
     Key: {
-      pk: { S: playlistId }, // You need to provide the type explicitly
+      pk: { S: playlistId }, // Explicit type for low-level client
     },
   };
 
   try {
     await client.send(new DeleteItemCommand(params));
     return {
-      statusCode: 204, // No Content
-      body: JSON.stringify("Item deleted successfully"),
+      statusCode: 200,
+      body: JSON.stringify({ message: "Item deleted successfully" }),
     };
   } catch (err) {
     console.error("Error deleting item from DynamoDB", err);
     return {
       statusCode: 500,
-      body: JSON.stringify("Error deleting item from DynamoDB"),
+      body: JSON.stringify({ message: "Error deleting item from DynamoDB" }),
     };
   }
 };
