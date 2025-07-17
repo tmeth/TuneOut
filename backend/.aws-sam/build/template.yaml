@@ -26,6 +26,66 @@ Resources:
               Ref: PlaylistAPI
     Metadata:
       SamResourceId: ReadPlaylistFunction
+  DeletePlaylistFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DeletePlaylistFunction
+      Handler: index.handler
+      Runtime: nodejs22.x
+      CodeUri: DeletePlaylistFunction
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: tune_out
+      Events:
+        ApiForMyApp:
+          Type: HttpApi
+          Properties:
+            Path: /DeletePlaylist
+            Method: DELETE
+            ApiId:
+              Ref: PlaylistAPI
+    Metadata:
+      SamResourceId: DeletePlaylistFunction
+  CreatePlaylistFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: CreatePlaylistFunction
+      Handler: index.handler
+      Runtime: nodejs22.x
+      CodeUri: CreatePlaylistFunction
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: tune_out
+      Events:
+        ApiForMyApp:
+          Type: HttpApi
+          Properties:
+            Path: /CreatePlaylist
+            Method: POST
+            ApiId:
+              Ref: PlaylistAPI
+    Metadata:
+      SamResourceId: CreatePlaylistFunction
+  UpdatePlaylistFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: UpdatePlaylistFunction
+      Handler: index.handler
+      Runtime: nodejs22.x
+      CodeUri: UpdatePlaylistFunction
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: tune_out
+      Events:
+        ApiForMyApp:
+          Type: HttpApi
+          Properties:
+            Path: /UpdatePlaylist
+            Method: POST
+            ApiId:
+              Ref: PlaylistAPI
+    Metadata:
+      SamResourceId: UpdatePlaylistFunction
 Outputs:
   ApiUrl:
     Description: HTTP API endpoint base URL
