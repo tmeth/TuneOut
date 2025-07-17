@@ -1,9 +1,9 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import {
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const {
   DynamoDBDocumentClient,
   UpdateCommand,
   GetCommand,
-} from "@aws-sdk/lib-dynamodb";
+} = require("@aws-sdk/lib-dynamodb");
 
 const client = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
@@ -16,11 +16,9 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Methods": "POST,OPTIONS",
 };
 
-export const handler = async (event) => {
-  // 🔍 Log the incoming event to CloudWatch
+exports.handler = async (event) => {
   console.log("Incoming event:", JSON.stringify(event, null, 2));
 
-  // Handle OPTIONS pre-flight request for CORS
   if (event?.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -29,7 +27,6 @@ export const handler = async (event) => {
     };
   }
 
-  // ✅ Safe method check to avoid crashing if httpMethod is missing
   if (event?.httpMethod && event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -53,7 +50,6 @@ export const handler = async (event) => {
 
     const newSong = { title, artist, duration };
 
-    // Get the existing playlist
     const getCommand = new GetCommand({
       TableName: TABLE_NAME,
       Key: { pk: playlistId },
@@ -69,10 +65,8 @@ export const handler = async (event) => {
       };
     }
 
-    // Append new song to existing songs array
     const updatedSongs = [...(playlist.songs || []), newSong];
 
-    // Update the playlist
     const updateCommand = new UpdateCommand({
       TableName: TABLE_NAME,
       Key: { pk: playlistId },

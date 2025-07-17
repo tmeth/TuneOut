@@ -1,22 +1,35 @@
-export const handler = async (event) => {
-  const params = event.queryStringParameters || {};
-  const playlistId = params.playlistId;
+const { DynamoDBClient, DeleteItemCommand } = require("@aws-sdk/client-dynamodb");
+
+const client = new DynamoDBClient({ region: "us-east-1" });
+
+exports.handler = async (event) => {
+  const playlistId = event?.queryStringParameters?.playlistId;
 
   if (!playlistId) {
     return {
       statusCode: 400,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({ message: "Missing playlistId in query string" }),
+      body: JSON.stringify({ message: "Missing playlistId in query parameters" }),
     };
   }
 
-  return {
-    statusCode: 200,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
+  const params = {
+    TableName: "tune_out",
+    Key: {
+      pk: { S: playlistId }, // You need to provide the type explicitly
     },
-    body: JSON.stringify({ message: `Playlist with ID ${playlistId} deleted.` }),
   };
+
+  try {
+    await client.send(new DeleteItemCommand(params));
+    return {
+      statusCode: 204, // No Content
+      body: JSON.stringify("Item deleted successfully"),
+    };
+  } catch (err) {
+    console.error("Error deleting item from DynamoDB", err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify("Error deleting item from DynamoDB"),
+    };
+  }
 };
