@@ -9,7 +9,7 @@ function DeletePlaylist() {
   const handleDelete = async () => {
     try {
       const response = await fetch(
-        `https://kx6su1w0sa.execute-api.us-east-1.amazonaws.com/deletePlaylist?playlistId=${playlistId}`,
+        `https://l9kvphvd0a.execute-api.us-east-1.amazonaws.com/deletePlaylist?playlistId=${playlistId}`,
         {
           method: 'DELETE',
         }

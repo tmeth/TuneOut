@@ -28,7 +28,7 @@ const CreatePlaylist = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch('https://fj26176edf.execute-api.us-east-1.amazonaws.com/createPlaylist', {
+      const res = await fetch('https://l9kvphvd0a.execute-api.us-east-1.amazonaws.com/createPlaylist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -9,7 +9,7 @@ function readPlaylist(){
     const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("https://47snssf5zohbjkzmypiemcbify0uvfms.lambda-url.us-east-1.on.aws/ ") 
+    fetch("https://l9kvphvd0a.execute-api.us-east-1.amazonaws.com/readPlaylist") 
       .then((res) => {
         if (!res.ok) throw new Error("Network response was not OK");
         return res.json();
