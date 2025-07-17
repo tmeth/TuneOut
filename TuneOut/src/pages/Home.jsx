@@ -35,9 +35,9 @@ function Home() {
           <div key={playlist.pk} className="playlist-card">
             <h3>{playlist.name}</h3>
             <div className="actions">
-              <button onClick={() => navigate(`/readPlaylist/${playlist.pk}`)}>Open</button>
-              <button onClick={() => navigate(`/addSong/${playlist.id}`)}>Add Song</button>
-              <button onClick={() => navigate(`/deletePlaylist/${playlist.id}`)} className="delete-btn">🗑️</button>
+              <button onClick={() => navigate(`/ReadPlaylist/${playlist.pk}`)}>Open</button>
+              <button onClick={() => navigate(`/AddSong/${playlist.pk}`)}>Add Song</button>
+              <button onClick={() => navigate(`/DeletePlaylist/${playlist.pk}`)} className="delete-btn">🗑️</button>
             </div>
           </div>
         ))}

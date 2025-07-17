@@ -10,7 +10,7 @@ const CreatePlaylist = () => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
 
-  const addSong = () => {
+  const AddSong = () => {
     if (songTitle && songArtist && songDuration) {
       const newSong = {
         title: songTitle.trim(),
@@ -101,7 +101,7 @@ const CreatePlaylist = () => {
               value={songDuration}
               onChange={(e) => setSongDuration(e.target.value)}
             />
-            <button type="button" className="btn btn-outline-primary" onClick={addSong}>+</button>
+            <button type="button" className="btn btn-outline-primary" onClick={AddSong}>+</button>
           </div>
         </div>
 

@@ -11,11 +11,11 @@ function AddSong() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = { playlistId: `playlist${playlistId}`, title, artist, duration };
+    const payload = { playlistId, title, artist, duration };
 
     try {
       const response = await fetch(
-        'https://l9kvphvd0a.execute-api.us-east-1.amazonaws.com/default/updatePlaylist',
+        'https://l9kvphvd0a.execute-api.us-east-1.amazonaws.com/UpdatePlaylist',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
