@@ -1,10 +1,9 @@
-import { DynamoDBClient, GetItemCommand  } from "@aws-sdk/client-dynamodb";
-import { unmarshall } from "@aws-sdk/util-dynamodb"; // converts DynamoDB format to JS object
-import { ScanCommand } from "@aws-sdk/client-dynamodb";
+const { DynamoDBClient, GetItemCommand, ScanCommand } = require("@aws-sdk/client-dynamodb");
+const { unmarshall } = require("@aws-sdk/util-dynamodb"); // converts DynamoDB format to JS object
 
-const client = new DynamoDBClient({region: "us-east-1" });
+const client = new DynamoDBClient({ region: "us-east-1" });
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   const command = new ScanCommand({ TableName: "tune_out" });
 
   try {
@@ -23,4 +22,3 @@ export const handler = async (event) => {
     };
   }
 };
-
