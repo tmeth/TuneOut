@@ -6,6 +6,16 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       Name: PlaylistAPI
+      CorsConfiguration:
+        AllowMethods:
+        - GET
+        - POST
+        - DELETE
+        - OPTIONS
+        AllowHeaders:
+        - '*'
+        AllowOrigins:
+        - http://localhost:5173
   ReadPlaylistFunction:
     Type: AWS::Serverless::Function
     Properties:

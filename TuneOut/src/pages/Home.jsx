@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import readPlaylist from './ReadPlaylist';
+// import readPlaylist from './ReadPlaylist';
 
 function Home() {
   const navigate = useNavigate();  
@@ -12,7 +12,8 @@ function Home() {
   useEffect(() => {
     async function fetchPlaylists() {
       try {
-        const response = await fetch('https://47snssf5zohbjkzmypiemcbify0uvfms.lambda-url.us-east-1.on.aws/');
+        const response = await fetch('https://l9kvphvd0a.execute-api.us-east-1.amazonaws.com/readPlaylist');
+        console.log(response)
         const playlistNames = await response.json();
         setPlaylists(playlistNames);
       } catch (error) {
