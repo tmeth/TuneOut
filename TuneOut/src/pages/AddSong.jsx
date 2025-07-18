@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 function AddSong() {
-  const { id: playlistId } = useParams(); // gets playlist ID from URL
+  const { id: playlistName } = useParams();
+
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
   const [duration, setDuration] = useState('');
@@ -11,7 +12,12 @@ function AddSong() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = { playlistId, title, artist, duration };
+    const payload = {
+      playlistId: playlistName,
+      title,
+      artist,
+      duration,
+    };
 
     try {
       const response = await fetch(
@@ -39,33 +45,82 @@ function AddSong() {
   };
 
   return (
-    <div className="add-song">
-      <h2>Add a Song to Playlist {playlistId}</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        /><br />
-        <input
-          type="text"
-          placeholder="Artist"
-          value={artist}
-          onChange={(e) => setArtist(e.target.value)}
-          required
-        /><br />
-        <input
-          type="text"
-          placeholder="Duration (e.g. 3:45)"
-          value={duration}
-          onChange={(e) => setDuration(e.target.value)}
-          required
-        /><br />
-        <button type="submit">Add Song</button>
-      </form>
-      <p>{message}</p>
+    <div
+      className="d-flex align-items-center justify-content-center"
+      style={{
+        minHeight: 'calc(100vh - 100px)', // slightly less than full height to avoid overflow
+        background: 'linear-gradient(135deg, #f8f9fa, #e0e7ff)',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        className="card shadow-sm rounded-4 border-0"
+        style={{
+          width: '100%',
+          maxWidth: '360px',
+          padding: '1rem',
+        }}
+      >
+        <h6 className="text-center text-muted mb-1">Add a Song to</h6>
+        <h5 className="text-center text-primary fw-semibold mb-2">"{playlistName}"</h5>
+
+        <form onSubmit={handleSubmit}>
+          <div className="form-floating mb-1">
+            <input
+              type="text"
+              className="form-control"
+              id="title"
+              placeholder="Song Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+            <label htmlFor="title">Title</label>
+          </div>
+
+          <div className="form-floating mb-1">
+            <input
+              type="text"
+              className="form-control"
+              id="artist"
+              placeholder="Artist"
+              value={artist}
+              onChange={(e) => setArtist(e.target.value)}
+              required
+            />
+            <label htmlFor="artist">Artist</label>
+          </div>
+
+          <div className="form-floating mb-2">
+            <input
+              type="text"
+              className="form-control"
+              id="duration"
+              placeholder="Duration"
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+              required
+            />
+            <label htmlFor="duration">Duration (e.g. 3:45)</label>
+          </div>
+
+          <button type="submit" className="btn btn-primary w-100 fw-bold py-2">
+            🎶 Add Song
+          </button>
+        </form>
+
+        {message && (
+          <div
+            className={`alert mt-2 py-1 px-2 text-center ${
+              message.startsWith('✅') ? 'alert-success' : 'alert-danger'
+            }`}
+            style={{ fontSize: '0.85rem' }}
+            role="alert"
+          >
+            {message}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
