@@ -1,51 +1,85 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+function ReadPlaylist() {
+  const { id } = useParams();
 
-function readPlaylist(){
-    const { id } = useParams();
-
-    const [playlist, setPlaylist] = useState([]);
-    const [error, setError] = useState(null);
+  const [playlist, setPlaylist] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("https://l9kvphvd0a.execute-api.us-east-1.amazonaws.com/readPlaylist") 
+    fetch('https://l9kvphvd0a.execute-api.us-east-1.amazonaws.com/readPlaylist')
       .then((res) => {
-        if (!res.ok) throw new Error("Network response was not OK");
+        if (!res.ok) throw new Error('Network response was not OK');
         return res.json();
       })
       .then((data) => {
-        const selected = data.find(p => String(p.pk) === id);
-        setPlaylist(selected)
+        const selected = data.find((p) => String(p.pk) === id);
+        setPlaylist(selected);
       })
       .catch((err) => {
-        console.error("Error fetching playlist:", err);
-        setError("Something went wrong fetching the playlist.");
+        console.error('Error fetching playlist:', err);
+        setError('Something went wrong fetching the playlist.');
       });
   }, [id]);
-  if (error) return <p>{error}</p>;
-  if (!playlist) return <p>Loading...</p>;
 
   return (
-    <div>
-      <h2>{playlist.name || playlist.title || "Untitled Playlist"}</h2>
-      <p><strong>Author:</strong> {playlist.author || "Unknown"}</p>
-      
-      <h3>Songs</h3>
-      {Array.isArray(playlist.songs) ? (
-        <ul>
-          {playlist.songs.map((song, i) => (
-            <li key={i}>
-              <strong>{song.title}</strong> — {song.artist} <em>({song.duration})</em>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No songs listed for this playlist.</p>
-      )}
+    <div
+      className="d-flex align-items-center justify-content-center"
+      style={{
+        minHeight: 'calc(100vh - 100px)',
+        background: 'linear-gradient(135deg, #f8f9fa, #e0e7ff)',
+        overflow: 'hidden',
+        padding: '1rem',
+      }}
+    >
+      <div
+        className="card shadow-sm rounded-4 border-0 w-100"
+        style={{ maxWidth: '540px', padding: '1.5rem' }}
+      >
+        {error && (
+          <div className="alert alert-danger text-center py-2" role="alert">
+            {error}
+          </div>
+        )}
 
+        {!playlist ? (
+          <div className="text-center text-muted">Loading playlist...</div>
+        ) : (
+          <>
+            <h4 className="fw-bold text-dark text-center mb-1">
+              {playlist.name || playlist.title || 'Untitled Playlist'}
+            </h4>
+            <p className="text-center text-muted mb-4 small">
+              by <strong>{playlist.author || 'Unknown'}</strong>
+            </p>
+
+            <h6 className="text-uppercase text-secondary fw-semibold small mb-2">Songs</h6>
+
+            {Array.isArray(playlist.songs) && playlist.songs.length > 0 ? (
+            <ul className="list-group list-group-flush small">
+              {playlist.songs.map((song, i) => (
+                <li
+                  key={i}
+                  className="list-group-item px-0 d-flex justify-content-between align-items-center"
+                >
+                  <div className="w-100">
+                    <div className="text-start fw-semibold">{song.title}</div>
+                    <div className="text-start text-muted small">{song.artist}</div>
+                  </div>
+                  <span className="text-secondary ms-3">{song.duration}</span>
+                </li>
+              ))}
+            </ul>
+
+            ) : (
+              <p className="text-muted fst-italic">No songs listed for this playlist.</p>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
-
 }
-export default readPlaylist
+
+export default ReadPlaylist;
