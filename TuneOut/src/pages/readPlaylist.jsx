@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function ReadPlaylist() {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [playlist, setPlaylist] = useState(null);
@@ -75,6 +77,15 @@ function ReadPlaylist() {
             ) : (
               <p className="text-muted fst-italic">No songs listed for this playlist.</p>
             )}
+            <div className="d-flex flex-column align-items-center gap-2 mb-4">
+
+                  <button
+                      onClick={() => navigate(`/AddSong/${playlist.pk}`)}
+                      className="btn btn-outline-secondary btn-sm w-75"
+                    >
+                      Add Song
+                    </button>
+            </div> 
           </>
         )}
       </div>
