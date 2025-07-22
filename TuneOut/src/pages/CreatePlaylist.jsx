@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CreatePlaylist = () => {
   const [playlistName, setPlaylistName] = useState('');
@@ -9,6 +10,8 @@ const CreatePlaylist = () => {
   const [songList, setSongList] = useState([]);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
 
   const AddSong = () => {
     if (songTitle && songArtist && songDuration) {
@@ -49,6 +52,20 @@ const CreatePlaylist = () => {
       setError(err.message || 'Failed to fetch');
       setResponse(null);
     }
+
+    // wait until the success message shows before navigating
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setTimeout(() => {
+      navigate('/');
+    }
+    , 3000);
+    // reset form fields
+    setPlaylistName('');
+    setPlaylistAuthor('');
+    setSongList([]);
+    setSongTitle('');
+    setSongArtist('');
+    setSongDuration('');
   };
 
   return (
