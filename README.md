@@ -32,6 +32,7 @@ cd TuneOut
 ```
 
 ### 2. Setup Frontend
+ *The app must be run on port 5173.*
 
 ```bash
 cd TuneOut
