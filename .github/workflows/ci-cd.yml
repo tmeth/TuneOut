@@ -31,10 +31,7 @@ jobs:
     name: Deploy Backend (SAM)
     runs-on: ubuntu-latest
     needs: test-frontend
-    if: |
-      github.ref == 'refs/heads/main' ||
-      (github.event_name == 'pull_request' && github.base_ref == 'main')
-
+    if: github.ref == 'refs/heads/main' 
 
     defaults:
       run:
