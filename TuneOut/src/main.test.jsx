@@ -1,25 +1,40 @@
 import React from 'react';
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
+import { vi, describe, expect, test, beforeEach, afterEach } from 'vitest';
 
-vi.mock('react-dom/client', () => {
-  return {
-    createRoot: vi.fn(() => ({
-      render: vi.fn(),
-    })),
-  };
+// 🧪 Create a mock render method
+const mockRender = vi.fn();
+
+// ✅ Stub a fake DOM root for mounting
+beforeEach(() => {
+  const root = document.createElement('div');
+  root.id = 'root';
+  document.body.appendChild(root);
 });
 
-describe('main entry point', () => {
-  test('renders <App /> inside <StrictMode> using createRoot', () => {
-    // Clear module cache so that import runs the code fresh
-    vi.resetModules();
+afterEach(() => {
+  document.body.innerHTML = '';
+  vi.resetModules();
+});
 
-    require('./main.jsx');
+// 🔧 Mock react-dom/client before dynamic import
+vi.mock('react-dom/client', () => ({
+  createRoot: vi.fn(() => ({
+    render: mockRender,
+  })),
+}));
+
+// 🧪 Test the main entry point behavior
+describe('main entry point', () => {
+  test('renders <App /> inside <StrictMode> using createRoot', async () => {
+    // ⏬ Dynamically import to trigger JSX-aware transform
+    const { createRoot } = await import('react-dom/client');
+    await import('./main.jsx');
 
     expect(createRoot).toHaveBeenCalledWith(document.getElementById('root'));
-    expect(createRoot().render).toHaveBeenCalledWith(
+
+    expect(mockRender).toHaveBeenCalledWith(
       expect.objectContaining({
         type: StrictMode,
         props: expect.objectContaining({
