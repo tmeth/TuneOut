@@ -37,7 +37,7 @@ function AddSong() {
 
     try {
       const response = await fetch(
-        'https://l9kvphvd0a.execute-api.us-east-1.amazonaws.com/UpdatePlaylist',
+        'https://8xuvmrmdtf.execute-api.us-east-1.amazonaws.com/UpdatePlaylist',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
