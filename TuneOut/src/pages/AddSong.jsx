@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function AddSong() {
   const { id } = useParams(); // playlist ID from URL
+  const navigate = useNavigate();
 
   const [playlistName, setPlaylistName] = useState('');
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
   const [duration, setDuration] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false); // 🔒 Prevent double submits
 
-  // 🌟 Fetch playlist name using ID
   useEffect(() => {
     async function fetchName() {
       try {
@@ -25,15 +26,12 @@ function AddSong() {
     fetchName();
   }, [id]);
 
-  // 🚀 Handle song submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      playlistId: id,
-      title,
-      artist,
-      duration,
-    };
+    if (loading) return;
+
+    setLoading(true);
+    const payload = { playlistId: id, title, artist, duration };
 
     try {
       const response = await fetch(
@@ -52,11 +50,15 @@ function AddSong() {
         setTitle('');
         setArtist('');
         setDuration('');
+
+        setTimeout(() => navigate('/'), 2000); // ⏳ Redirect after 1 second
       } else {
         setMessage(`❌ Error: ${data.message}`);
       }
     } catch (err) {
       setMessage(`❌ Network error: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,10 +74,7 @@ function AddSong() {
     >
       <div
         className="card shadow-sm rounded-4 border-0 w-100"
-        style={{
-          maxWidth: '540px',
-          padding: '1.5rem',
-        }}
+        style={{ maxWidth: '540px', padding: '1.5rem' }}
       >
         <h4 className="fw-bold text-dark text-center mb-1">
           {playlistName}
@@ -124,8 +123,12 @@ function AddSong() {
             <label htmlFor="duration">Duration</label>
           </div>
 
-          <button type="submit" className="btn btn-outline-secondary btn-sm w-75 d-block mx-auto">
-            🎵 Add Song
+          <button
+            type="submit"
+            className="btn btn-outline-secondary btn-sm w-75 d-block mx-auto"
+            disabled={loading}
+          >
+            {loading ? '🎶 Adding...' : '🎵 Add Song'}
           </button>
         </form>
 
