@@ -14,7 +14,7 @@ function AddSong() {
   useEffect(() => {
     async function fetchName() {
       try {
-        const res = await fetch('https://l9kvphvd0a.execute-api.us-east-1.amazonaws.com/readPlaylist');
+        const res = await fetch('https://8xuvmrmdtf.execute-api.us-east-1.amazonaws.com/readPlaylist');
         const data = await res.json();
         const matched = data.find((p) => String(p.pk) === id);
         setPlaylistName(matched?.name || matched?.title || 'Untitled Playlist');
