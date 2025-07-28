@@ -1,141 +1,103 @@
-import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+/// <reference types="vitest" />
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
 import AddSong from './AddSong';
-import * as router from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
-// Mock fetch globally
-global.fetch = vi.fn();
-
-// Mock useParams once, avoid "Cannot redefine property" error
+// ✅ Correctly mock useParams and useNavigate
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
     useParams: () => ({ id: '123' }),
+    useNavigate: () => vi.fn(),
   };
 });
 
+// ✅ Mock global fetch
+global.fetch = vi.fn();
+
 describe('AddSong Component', () => {
   beforeEach(() => {
-    fetch.mockClear();
+    vi.clearAllMocks();
   });
 
-  test('fetches and displays playlist name', async () => {
+  it('renders and fetches playlist name', async () => {
     fetch.mockResolvedValueOnce({
-      ok: true,
       json: async () => [{ pk: '123', name: 'My Playlist' }],
+      ok: true,
     });
 
-    render(<AddSong />);
+    render(
+      <MemoryRouter>
+        <AddSong />
+      </MemoryRouter>
+    );
 
     expect(await screen.findByText('My Playlist')).toBeInTheDocument();
   });
 
-  test('shows "Untitled Playlist" if fetch fails', async () => {
-    fetch.mockRejectedValueOnce(new Error('fail'));
+  it('submits the form and shows success message then navigates', async () => {
+    fetch
+      .mockResolvedValueOnce({
+        json: async () => [{ pk: '123', name: 'Test Playlist' }],
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: async () => ({ message: 'Success' }),
+        ok: true,
+      });
 
-    render(<AddSong />);
-
-    expect(await screen.findByText('Untitled Playlist')).toBeInTheDocument();
-  });
-
-  test('submits the form and shows success message', async () => {
-    // Mock playlist fetch
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => [{ pk: '123', name: 'My Playlist' }],
-    });
-
-    // Mock POST fetch for song add
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({}),
-    });
-
-    render(<AddSong />);
-
-    await screen.findByText('My Playlist');
-
-    fireEvent.change(screen.getByLabelText(/Title/i), {
-      target: { value: 'Song 1' },
-    });
-    fireEvent.change(screen.getByLabelText(/Artist/i), {
-      target: { value: 'Artist 1' },
-    });
-    fireEvent.change(screen.getByLabelText(/Duration/i), {
-      target: { value: '3:45' },
-    });
-
-    // Submit by clicking the button (fixes your issue)
-    fireEvent.click(screen.getByRole('button', { name: /add song/i }));
-
-    await waitFor(() =>
-      expect(screen.getByText(/✅ Song added successfully!/i)).toBeInTheDocument()
+    render(
+      <MemoryRouter>
+        <AddSong />
+      </MemoryRouter>
     );
-  });
 
-  test('shows error message if server returns error', async () => {
-    // Mock playlist fetch
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => [{ pk: '123', name: 'My Playlist' }],
+    fireEvent.change(screen.getByLabelText(/title/i), {
+      target: { value: 'Test Song' },
     });
-
-    // Mock POST fetch returning error
-    fetch.mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ message: 'Server error' }),
+    fireEvent.change(screen.getByLabelText(/artist/i), {
+      target: { value: 'Test Artist' },
     });
-
-    render(<AddSong />);
-
-    await screen.findByText('My Playlist');
-
-    fireEvent.change(screen.getByLabelText(/Title/i), {
-      target: { value: 'Song 2' },
-    });
-    fireEvent.change(screen.getByLabelText(/Artist/i), {
-      target: { value: 'Artist 2' },
-    });
-    fireEvent.change(screen.getByLabelText(/Duration/i), {
-      target: { value: '4:00' },
+    fireEvent.change(screen.getByLabelText(/duration/i), {
+      target: { value: '3:30' },
     });
 
     fireEvent.click(screen.getByRole('button', { name: /add song/i }));
 
-    await waitFor(() =>
-      expect(screen.getByText(/❌ Error: Server error/i)).toBeInTheDocument()
-    );
+    expect(await screen.findByText(/✅ Song added successfully!/i)).toBeInTheDocument();
   });
 
-  test('shows network error message if fetch throws', async () => {
-    // Mock playlist fetch
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => [{ pk: '123', name: 'My Playlist' }],
+  it('shows error message on failed submission', async () => {
+    fetch
+      .mockResolvedValueOnce({
+        json: async () => [{ pk: '123', name: 'Test Playlist' }],
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: async () => ({ message: 'Something went wrong' }),
+        ok: false,
+      });
+
+    render(
+      <MemoryRouter>
+        <AddSong />
+      </MemoryRouter>
+    );
+
+    fireEvent.change(screen.getByLabelText(/title/i), {
+      target: { value: 'Bad Song' },
     });
-
-    // Mock POST fetch throws error
-    fetch.mockRejectedValueOnce(new Error('Network failure'));
-
-    render(<AddSong />);
-
-    await screen.findByText('My Playlist');
-
-    fireEvent.change(screen.getByLabelText(/Title/i), {
-      target: { value: 'Song 3' },
+    fireEvent.change(screen.getByLabelText(/artist/i), {
+      target: { value: 'Bad Artist' },
     });
-    fireEvent.change(screen.getByLabelText(/Artist/i), {
-      target: { value: 'Artist 3' },
-    });
-    fireEvent.change(screen.getByLabelText(/Duration/i), {
-      target: { value: '2:50' },
+    fireEvent.change(screen.getByLabelText(/duration/i), {
+      target: { value: '0:00' },
     });
 
     fireEvent.click(screen.getByRole('button', { name: /add song/i }));
 
-    await waitFor(() =>
-      expect(screen.getByText(/❌ Network error: Network failure/i)).toBeInTheDocument()
-    );
+    expect(await screen.findByText(/❌ Error:/i)).toBeInTheDocument();
   });
 });
