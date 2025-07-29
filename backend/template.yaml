@@ -17,7 +17,7 @@ Resources:
           - "*"
         AllowOrigins:
           - http://localhost:5173
-          - https://main.d37vhm5bmnvd3f.amplifyapp.com/
+          - https://main.d37vhm5bmnvd3f.amplifyapp.com
 
   # Read Playlist
   ReadPlaylistFunction:
