@@ -73,6 +73,18 @@ function SiteHeader() {
                 Contact Us
               </NavLink>
             </li>
+            <li className="nav-item">
+            <NavLink
+              to="/subscribe"
+              className={({ isActive }) =>
+                'nav-link px-2' + (isActive ? ' active fw-bold' : ' text-light')
+              }
+              onClick={handleNavLinkClick}
+            >
+              Subscribe
+            </NavLink>
+          </li>
+
           </ul>
         </div>
       </div>
