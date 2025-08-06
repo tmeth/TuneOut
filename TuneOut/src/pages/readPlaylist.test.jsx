@@ -16,18 +16,21 @@ const mockData = {
         ],
       },
       {
-          pk: '456',
-          name: 'Fast Songs',
-          author: 'TuneOut',
-          songs: [
-            { title: 'Hinei Ma Tov', duration: '3:30', artist: 'Mordechai Ben David' }
-          ]
-        }
+        pk: '456',
+        name: 'Fast Songs',
+        author: 'TuneOut',
+        songs: [
+          { title: 'Hinei Ma Tov', duration: '3:30', artist: 'Mordechai Ben David' },
+        ],
+      },
     ]),
 };
 
 global.fetch = vi.fn(() => mockData);
 
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
 test('renders playlist details when fetch succeeds', async () => {
   render(
@@ -37,19 +40,18 @@ test('renders playlist details when fetch succeeds', async () => {
       </Routes>
     </MemoryRouter>
   );
-screen.debug();
 
-  const heading = await screen.findByRole('heading', { level: 4 });
-expect(heading).toHaveTextContent(/Oldies/i);
+  // Look for the h1 heading (playlist title)
+  const heading = await screen.findByRole('heading', { level: 1 });
+  expect(heading).toHaveTextContent(/Oldies/i);
+
   expect(screen.getByText(/Leah Feldman/i)).toBeInTheDocument();
   expect(screen.getByText(/Pray and Sing/i)).toBeInTheDocument();
   expect(screen.getByText(/MBD/i)).toBeInTheDocument();
   expect(screen.getByText(/2:30/)).toBeInTheDocument();
 });
 
-
-
-//Shows error when playlist not found
+// Shows error when playlist not found
 test('displays error when playlist is missing', async () => {
   global.fetch = vi.fn(() =>
     Promise.resolve({
