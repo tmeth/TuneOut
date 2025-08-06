@@ -5,7 +5,7 @@ function Home() {
   const navigate = useNavigate();
   const [playlists, setPlaylists] = useState([]);
 
-  async function handleSubscribe(e) {
+  async function handleSubscribeEmail(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const email = formData.get("email");
@@ -118,7 +118,7 @@ function Home() {
 
         {/* Subscribe Form */}
     <div className="text-center mt-3">
-      <form onSubmit={handleSubscribe} className="d-inline-block">
+      <form onSubmit={handleSubscribeEmail} className="d-inline-block">
         <label htmlFor="email" className="form-label mb-2">
           📬 Subscribe for Weekly Updates
         </label>
