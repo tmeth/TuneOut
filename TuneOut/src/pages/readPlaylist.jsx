@@ -32,7 +32,7 @@ function ReadPlaylist() {
   }, [id]);
 
   return (
-    <div
+    <main
       className="d-flex align-items-center justify-content-center"
       style={{
         minHeight: 'calc(100vh - 100px)',
@@ -46,36 +46,61 @@ function ReadPlaylist() {
         style={{ maxWidth: '540px', padding: '1.5rem' }}
       >
         {error && (
-          <div className="alert alert-danger text-center py-2" role="alert">
+          <div className="alert alert-danger text-center py-2" role="alert" tabIndex={-1}>
             {error}
           </div>
         )}
 
         {!playlist ? (
-          <div className="text-center text-muted">Loading playlist...</div>
+          <div
+            className="text-center text-muted"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            Loading playlist...
+          </div>
         ) : (
           <>
-            <h4 className="fw-bold text-dark text-center mb-1">
+            {/* Use h1 for main playlist title */}
+            <h1 className="fw-bold text-dark text-center mb-1">
               {playlist.name || playlist.title || 'Untitled Playlist'}
-            </h4>
+            </h1>
             <p className="text-center text-muted mb-4 small">
               by <strong>{playlist.author || 'Unknown'}</strong>
             </p>
 
-            <h6 className="text-uppercase text-secondary fw-semibold small mb-2">Songs</h6>
+            {/* Use h2 for Songs section */}
+            <h2 className="text-uppercase text-secondary fw-semibold small mb-2" id="songs-heading">
+              Songs
+            </h2>
 
             {Array.isArray(playlist.songs) && playlist.songs.length > 0 ? (
-              <ul className="list-group list-group-flush small">
+              <ul
+                className="list-group list-group-flush small"
+                aria-labelledby="songs-heading"
+              >
                 {playlist.songs.map((song, i) => (
                   <li
                     key={i}
                     className="list-group-item px-0 d-flex justify-content-between align-items-center"
                   >
                     <div className="w-100">
-                      <div id="playlistTitle" className="text-start fw-semibold">{song.title}</div>
-                      <div id="playlistArtist" className="text-start text-muted small">{song.artist}</div>
+                      <div
+                        className="text-start fw-semibold"
+                        id={`song-title-${i}`}
+                      >
+                        {song.title}
+                      </div>
+                      <div
+                        className="text-start text-muted small"
+                        id={`song-artist-${i}`}
+                      >
+                        {song.artist}
+                      </div>
                     </div>
-                    <span className="text-secondary ms-3">{song.duration}</span>
+                    <span className="text-secondary ms-3" aria-label={`Duration: ${song.duration}`}>
+                      {song.duration}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -87,6 +112,7 @@ function ReadPlaylist() {
               <button
                 onClick={() => navigate(`/AddSong/${playlist.pk}`)}
                 className="btn btn-outline-secondary btn-sm w-75"
+                aria-label={`Add song to playlist ${playlist.name || playlist.title}`}
               >
                 ➕ Add Song
               </button>
@@ -94,7 +120,7 @@ function ReadPlaylist() {
           </>
         )}
       </div>
-    </div>
+    </main>
   );
 }
 
