@@ -2,6 +2,11 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Lambda + API Gateway using SAM
 
+Parameters:
+  ExistingWeeklyTopicArn:
+    Type: String
+    Default: arn:aws:sns:us-east-1:381491939913:WeeklyTuneOutUpdates
+
 Resources:
   PlaylistAPI:
     Type: AWS::Serverless::HttpApi
@@ -93,6 +98,93 @@ Resources:
               Path: /UpdatePlaylist
               Method: POST
               ApiId: !Ref PlaylistAPI
+
+  #Subscribe
+  SubscribeFunction:
+      Type: AWS::Serverless::Function
+      Properties:
+        FunctionName: SubscribeFunction
+        Handler: index.handler 
+        Runtime: nodejs22.x
+        CodeUri: Subscribe/
+        Policies:
+           - Statement:
+              Effect: Allow
+              Action:
+                - sns:Publish
+                - sns:Subscribe
+              Resource: !Ref ExistingWeeklyTopicArn
+        Environment:
+          Variables:
+            WEEKLY_TOPIC_ARN: !Ref ExistingWeeklyTopicArn
+        Events:
+          SubscribeEvent:
+            Type: HttpApi
+            Properties:
+              Path: /subscribe
+              Method: POST
+              ApiId: !Ref PlaylistAPI
+  #Subscribe Topic Policy
+  WeeklyTuneOutTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref ExistingWeeklyTopicArn
+      PolicyDocument:
+        Statement:
+          - Sid: AllowLambdaSubscribe
+            Effect: Allow
+            Principal:
+               Service: lambda.amazonaws.com
+            Action: sns:Subscribe
+            Resource: !Ref ExistingWeeklyTopicArn
+  #Weekly Updates- publisher lambda to send message
+  WeeklyUpdatePublisherFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: WeeklyUpdatePublisher
+      Handler: index.handler
+      Runtime: nodejs22.x
+      CodeUri: Publisher/
+      Environment:
+        Variables:
+          WEEKLY_TOPIC_ARN: !Ref ExistingWeeklyTopicArn
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: tune_out
+        - Statement:
+            Effect: Allow
+            Action: sns:Publish
+            Resource: !Ref ExistingWeeklyTopicArn
+  #Event Bridge Scheduler (run publisher lambda once a week)
+  WeeklyUpdateSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      ScheduleExpression: rate(7 days)
+      FlexibleTimeWindow:
+        Mode: "OFF"
+      Target:
+        Arn: !GetAtt WeeklyUpdatePublisherFunction.Arn
+        RoleArn: !GetAtt SchedulerExecutionRole.Arn
+  #let schedular invoke lambda (permission for eventbridge)
+  SchedulerExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AllowLambdaInvoke
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt WeeklyUpdatePublisherFunction.Arn
 
 
 Outputs:
