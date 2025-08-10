@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 function AddSong() {
@@ -10,7 +10,9 @@ function AddSong() {
   const [artist, setArtist] = useState('');
   const [duration, setDuration] = useState('');
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false); // 🔒 Prevent double submits
+  const [loading, setLoading] = useState(false); // Prevent double submits
+
+  const messageRef = useRef(null);
 
   useEffect(() => {
     async function fetchName() {
@@ -25,6 +27,12 @@ function AddSong() {
     }
     fetchName();
   }, [id]);
+
+  useEffect(() => {
+    if (message && messageRef.current) {
+      messageRef.current.focus();
+    }
+  }, [message]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,7 +59,7 @@ function AddSong() {
         setArtist('');
         setDuration('');
 
-        setTimeout(() => navigate('/'), 2000); // ⏳ Redirect after 1 second
+        setTimeout(() => navigate('/'), 2000); // Redirect after 2 seconds
       } else {
         setMessage(`❌ Error: ${data.message}`);
       }
@@ -76,9 +84,9 @@ function AddSong() {
         className="card shadow-sm rounded-4 border-0 w-100"
         style={{ maxWidth: '540px', padding: '1.5rem' }}
       >
-        <h4 className="fw-bold text-dark text-center mb-1">
+        <h2 id="playlistTitle" className="fw-bold text-dark text-center mb-1">
           {playlistName}
-        </h4>
+        </h2>
         <p className="text-center text-muted mb-4 small">
           Add a new song to your playlist
         </p>
@@ -119,8 +127,10 @@ function AddSong() {
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
               required
+              pattern="^\d{1,2}:\d{2}$"
+              title="Duration format: mm:ss"
             />
-            <label htmlFor="duration">Duration</label>
+            <label htmlFor="duration">Duration (mm:ss)</label>
           </div>
 
           <button
@@ -134,10 +144,13 @@ function AddSong() {
 
         {message && (
           <div
+            ref={messageRef}
+            tabIndex="-1"
             className={`alert mt-3 py-2 text-center ${
               message.startsWith('✅') ? 'alert-success' : 'alert-danger'
             }`}
             role="alert"
+            aria-live="polite"
             style={{ fontSize: '0.85rem' }}
           >
             {message}

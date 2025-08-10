@@ -1,5 +1,5 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
 
 // Simple ID generator
 const generateId = () => `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
@@ -7,7 +7,7 @@ const generateId = () => `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 const client = new DynamoDBClient({});
 const dynamo = DynamoDBDocumentClient.from(client);
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   let body;
 
   try {
@@ -41,8 +41,8 @@ export const handler = async (event) => {
       name,
       author,
       songs,
-      createdAt: new Date().toISOString()
-    }
+      createdAt: new Date().toISOString(),
+    },
   };
 
   try {
@@ -56,7 +56,7 @@ export const handler = async (event) => {
       body: JSON.stringify({
         message: `Playlist '${name}' by ${author} saved to DynamoDB!`,
         id: playlistId,
-        songs
+        songs,
       }),
     };
   } catch (err) {

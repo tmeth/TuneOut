@@ -5,6 +5,32 @@ function Home() {
   const navigate = useNavigate();
   const [playlists, setPlaylists] = useState([]);
 
+  async function handleSubscribeEmail(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get("email");
+
+    const payload = {email};
+
+    try {
+      const res = await fetch("https://b0tejplce2.execute-api.us-east-1.amazonaws.com/subscribe", { 
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert("Thanks for subscribing!");
+      } else {
+        alert("Subscription failed. Try again later.");
+      }
+    } catch (error) {
+      console.error("Subscription error:", error);
+      alert("Something went wrong.");
+    }
+  }
+
+
   useEffect(() => {
     async function fetchPlaylists() {
       try {
@@ -45,7 +71,7 @@ function Home() {
           <p className="text-muted text-center">No playlists available. Create one to get started!</p>
         ) : (
           playlists.map((playlist) => (
-            <div key={playlist.pk} className="col-6 col-md-4 col-lg-3 mb-4 d-flex">
+            <div key={playlist.pk} id={playlist.name} className="col-6 col-md-4 col-lg-3 mb-4 d-flex">
               <div
                 className="card w-100 text-center shadow-sm"
                 style={{
@@ -89,6 +115,29 @@ function Home() {
           ))
         )}
       </div>
+
+        {/* Subscribe Form */}
+    <div className="text-center mt-3">
+      <form onSubmit={handleSubscribeEmail} className="d-inline-block">
+        <label htmlFor="email" className="form-label mb-2">
+          📬 Subscribe for Weekly Updates
+        </label>
+        <div className="input-group w-75 mx-auto">
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="you@example.com"
+            className="form-control"
+            required
+          />
+          <button type="submit" className="btn btn-primary">
+            Subscribe
+          </button>
+        </div>
+      </form>
+    </div>
+  
     </div>
   );
 }
