@@ -126,19 +126,19 @@ Resources:
               Method: POST
               ApiId: !Ref PlaylistAPI
   #Subscribe Topic Policy
-  # WeeklyTuneOutTopicPolicy:
-  #   Type: AWS::SNS::TopicPolicy
-  #   Properties:
-  #     Topics:
-  #       - !Ref ExistingWeeklyTopicArn
-  #     PolicyDocument:
-  #       Statement:
-  #         - Sid: AllowLambdaSubscribe
-  #           Effect: Allow
-  #           Principal:
-  #              Service: lambda.amazonaws.com
-  #           Action: sns:Subscribe
-  #           Resource: !Ref ExistingWeeklyTopicArn
+  WeeklyTuneOutTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref ExistingWeeklyTopicArn
+      PolicyDocument:
+        Statement:
+          - Sid: AllowLambdaSubscribe
+            Effect: Allow
+            Principal:
+               Service: lambda.amazonaws.com
+            Action: sns:Subscribe
+            Resource: !Ref ExistingWeeklyTopicArn
   #Weekly Updates- publisher lambda to send message
   WeeklyUpdatePublisherFunction:
     Type: AWS::Serverless::Function
